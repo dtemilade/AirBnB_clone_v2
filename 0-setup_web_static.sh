@@ -9,8 +9,8 @@ mkdir -p /data/web_static/shared/
 echo "Holberton School" > /data/web_static/releases/test/index.html
 ln -sf /data/web_static/releases/test/ /data/web_static/current
 
-chown -R ubuntu /data/
-chgrp -R ubuntu /data/
+chown -R dtemilade /data/
+chgrp -R dtemilade /data/
 
 printf %s "server {
     listen 80 default_server;
@@ -25,7 +25,7 @@ printf %s "server {
     }
 
     location /redirect_me {
-        return 301 http://cuberule.com/;
+        return 301 http://spiritlife.com/;
     }
 
     error_page 404 /404.html;
