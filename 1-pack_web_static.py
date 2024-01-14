@@ -8,7 +8,7 @@ from fabric.api import local
 
 
 def do_pack():
-    """ This function generates a.tgz archive from the contents
+    """ Fabric function that generates a.tgz archive from the contents
     of the web_static folder, using the function do_pack.
     """
     local('mkdir -p versions')
@@ -19,4 +19,3 @@ def do_pack():
         return file_path
     except Exception:
         return None
-

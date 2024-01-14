@@ -3,20 +3,20 @@
 
 from fabric.api import *
 
-env.hosts = ['35.168.2.211', '34.207.58.222']
+env.hosts = ['100.26.167.240', '3.83.227.79']
 env.user = "ubuntu"
 
 
 def do_clean(number=0):
-    """ CLEANS """
+    """deletes out-of-date archives"""
 
     number = int(number)
 
     if number == 0:
-        numbers = 1
+        retval = 1
     else:
-        numbers = number
+        retval = number
 
-    local('cd versions ; ls -t | head -n -{} | xargs rm -rf'.format(numbers))
+    local('cd versions ; ls -t | head -n -{} | xargs rm -rf'.format(retval))
     path = '/data/web_static/releases'
-    run('cd {} ; ls -t | head -n -{} | xargs rm -rf'.format(path, numbers))
+    run('cd {} ; ls -t | head -n -{} | xargs rm -rf'.format(path, retval))

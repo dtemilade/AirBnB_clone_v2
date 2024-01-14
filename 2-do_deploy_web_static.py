@@ -3,7 +3,7 @@
 
 from os.path import exists
 from fabric.api import put, run, env
-env.hosts = ['35.168.2.211', '34.207.58.222']
+env.hosts = ['100.26.167.240', '3.83.227.79']
 env.user = "ubuntu"
 
 
@@ -11,31 +11,30 @@ def do_deploy(archive_path):
     """function do_deploy"""
 
     path = '/data/web_static/releases/'
-    """spliting the archived path at /.
-    removing versions dir example:
-    versions/web_static_20170315003959.tgz
-    """
+    """spliting the archived path and removing versions"""
+    
     file_name = archive_path.split('/')[1]
 
-    " remove .tgz "
+    " to remove .tgz "
     no_extention = file_name.split('.')[0]
 
-    "Set destination path for unziping"
+    "to set destination path for unziping"
     where_to_unzip = ('{}' + '{}/').format(path, no_extention)
 
-    "Set destination path for storing zipped file"
+    "to set destination path for storing zipped file"
     tmp_path = ('/tmp/{}').format(file_name)
 
+    "Excemption output"
     if not exists(archive_path):
         return False
     try:
-        "Store zipped file in /tmp/"
+        "to store zipped file in /tmp/"
         put(archive_path, '/tmp/')
 
-        "Create the destination directory"
+        "to create the destination directory"
         run('sudo mkdir -p {}'.format(where_to_unzip))
 
-        "Unzipped the zipped file to the directory created"
+        "to Unzipped the zipped file to the directory created"
         run('sudo tar -xzf {} -C {}'.format(tmp_path, where_to_unzip))
 
         "Remove the zipped file in /tmp/"

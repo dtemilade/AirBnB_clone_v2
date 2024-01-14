@@ -1,18 +1,21 @@
 #!/usr/bin/env bash
 # Sets up a web server for deployment of web_static.
 
+sudo su
 apt-get update
 apt-get install -y nginx
 
 mkdir -p /data/web_static/releases/test/
 mkdir -p /data/web_static/shared/
-echo "Holberton School" > /data/web_static/releases/test/index.html
+touch /data/web_static/releases/test/index.html
+echo "Simple content to test Nginx configuration" > /data/web_static/releases/test/index.html
 ln -sf /data/web_static/releases/test/ /data/web_static/current
 
-chown -R dtemilade /data/
-chgrp -R dtemilade /data/
+chown -R $USER:$USER /data/
+chgrp -R $USER:$USER /data/
 
-printf %s "server {
+config=\
+"server {
     listen 80 default_server;
     listen [::]:80 default_server;
     add_header X-Served-By $HOSTNAME;
@@ -25,7 +28,7 @@ printf %s "server {
     }
 
     location /redirect_me {
-        return 301 http://spiritlife.com/;
+        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
     }
 
     error_page 404 /404.html;
@@ -33,6 +36,7 @@ printf %s "server {
       root /var/www/html;
       internal;
     }
-}" > /etc/nginx/sites-available/default
+}"
 
+echo "$config" | sudo dd status=none of=/etc/nginx/sites-enabled/default
 service nginx restart
