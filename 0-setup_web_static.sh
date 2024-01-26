@@ -2,11 +2,11 @@
 # Sets up a web server for deployment of web_static.
 
 
-apt-get update
-apt-get install -y nginx
+sudo apt-get update
+sudo apt-get install -y nginx
 sudo service nginx start
-mkdir -p /data/web_static/releases/test/
-mkdir -p /data/web_static/shared/
+sudo mkdir -p /data/web_static/releases/test/
+sudo mkdir -p /data/web_static/shared/
 echo "<html>
   <head>
   </head>
