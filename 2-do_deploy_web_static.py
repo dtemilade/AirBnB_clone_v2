@@ -12,7 +12,7 @@ def do_deploy(archive_path):
 
     path = '/data/web_static/releases/'
     """spliting the archived path and removing versions"""
-    
+
     file_name = archive_path.split('/')[1]
 
     " to remove .tgz "
