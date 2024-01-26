@@ -4,13 +4,19 @@
 
 apt-get update
 apt-get install -y nginx
-
+sudo service nginx start
 mkdir -p /data/web_static/releases/test/
 mkdir -p /data/web_static/shared/
-echo "Simple content to test Nginx configuration" > /data/web_static/releases/test/index.html
+echo "<html>
+  <head>
+  </head>
+  <body>
+    Holberton School
+  </body>
+</html>" > /data/web_static/releases/test/index.html
 ln -sf /data/web_static/releases/test/ /data/web_static/current
 
-chown -R $USER:$USER /data/
+sudo chown -R ubuntu:ubuntu /data/
 
 
 config=\
@@ -25,13 +31,12 @@ config=\
         alias /data/web_static/current;
         index index.html index.htm;
     }
-
-    location /redirect_me {
-        return 301 https://www.youtube.com/watch?v=QH2-TGUlwu4;
+    location / {
+        return 301 /hbnb_static/index.html;
     }
 
     error_page 404 /404.html;
-    location /404 {
+    location /404.html {
       root /var/www/html;
       internal;
     }
@@ -39,3 +44,4 @@ config=\
 
 echo "$config" | sudo dd status=none of=/etc/nginx/sites-enabled/default
 service nginx restart
+exit 0
