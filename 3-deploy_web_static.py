@@ -27,7 +27,7 @@ def do_deploy(archive_path):
 
     path = '/data/web_static/releases/'
     """spliting the archived path and removing versions"""
-    
+
     file_name = archive_path.split('/')[1]
 
     " to remove .tgz "
@@ -75,7 +75,7 @@ def do_deploy(archive_path):
 
 
 def deploy():
-    """Prototype: def deploy(): 
+    """Prototype: def deploy():
     Deploy function do_pack and do_deploy.
     """
     path = do_pack()
