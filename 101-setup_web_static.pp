@@ -1,62 +1,80 @@
-# Script that configures Nginx server with some folders and files
+#Puppet script that sets up your web servers for the deployment of web_static.
 
-exec {'update':
-  provider => shell,
-  command  => 'sudo apt-get -y update',
-  before   => Exec['install Nginx'],
+# Define package and service
+package { 'nginx':
+  ensure => installed,
 }
 
-exec {'install Nginx':
-  provider => shell,
-  command  => 'sudo apt-get -y install nginx',
-  before   => Exec['start Nginx'],
+service { 'nginx':
+  ensure  => 'running',
+  enable  => true,
+  require => Package['nginx'],
 }
 
-exec {'start Nginx':
-  provider => shell,
-  command  => 'sudo service nginx start',
-  before   => Exec['create first directory'],
+# Create directories
+file { '/data/web_static/releases/test/':
+  ensure => 'directory',
+  owner  => 'ubuntu',
+  group  => 'ubuntu',
+  mode   => '0755',
 }
 
-exec {'create first directory':
-  provider => shell,
-  command  => 'sudo mkdir -p /data/web_static/releases/test/',
-  before   => Exec['create second directory'],
+file { '/data/web_static/shared/':
+  ensure => 'directory',
+  owner  => 'ubuntu',
+  group  => 'ubuntu',
+  mode   => '0755',
 }
 
-exec {'create second directory':
-  provider => shell,
-  command  => 'sudo mkdir -p /data/web_static/shared/',
-  before   => Exec['content into html'],
-}
-
-exec {'content into html':
-  provider => shell,
-  command  => 'echo "Simple content to test Nginx configuration" | sudo tee /data/web_static/releases/test/index.html',
-  before   => Exec['symbolic link'],
-}
-
-exec {'symbolic link':
-  provider => shell,
-  command  => 'sudo ln -sf /data/web_static/releases/test/ /data/web_static/current',
-  before   => Exec['put location'],
-}
-
-exec {'put location':
-  provider => shell,
-  command  => 'sudo sed -i \'38i\\tlocation /hbnb_static/ {\n\t\talias /data/web_static/current/;\n\t\tautoindex off;\n\t}\n\' /etc/nginx/sites-available/default',
-  before   => Exec['restart Nginx'],
-}
-
-exec {'restart Nginx':
-  provider => shell,
-  command  => 'sudo service nginx restart',
-  before   => File['/data/']
-}
-
-file {'/data/':
-  ensure  => directory,
+# Create index.html
+file { '/data/web_static/releases/test/index.html':
+  ensure  => 'file',
+  content => '<html>
+  <head>
+  </head>
+  <body>
+    Holberton School
+  </body>
+</html>',
   owner   => 'ubuntu',
   group   => 'ubuntu',
-  recurse => true,
+  mode    => '0644',
 }
+
+# Create symbolic link
+file { '/data/web_static/current':
+  ensure  => 'link',
+  target  => '/data/web_static/releases/test/',
+  owner   => 'ubuntu',
+  group   => 'ubuntu',
+}
+
+# Define Nginx configuration
+file { '/etc/nginx/sites-enabled/default':
+  ensure  => 'file',
+  content => "server {
+    listen 80 default_server;
+    listen [::]:80 default_server;
+
+    root   /var/www/html;
+    index  index.html index.htm;
+
+    location /hbnb_static {
+        alias /data/web_static/current;
+        index index.html index.htm;
+    }
+    location / {
+        return 301 /hbnb_static/index.html;
+    }
+
+    error_page 404 /404.html;
+    location /404.html {
+      root /var/www/html;
+      internal;
+    }
+}",
+  require => File['/data/web_static/current'],
+  notify  => Service['nginx'],
+}
+
+# Restart Nginx service
