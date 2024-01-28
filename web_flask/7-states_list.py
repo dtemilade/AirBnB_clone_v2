@@ -30,6 +30,7 @@ def states_list():
 
 @app.teardown_appcontext
 def shutdown_session(exception=None):
+    if storage is not None:
     storage.close()
 
 
