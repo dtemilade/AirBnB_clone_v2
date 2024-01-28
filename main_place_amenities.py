@@ -1,24 +1,20 @@
 #!/usr/bin/python3
 """ Test link Many-To-Many Place <> Amenity
 """
-
-from models.user import User
+from models import *
 from models.place import Place
-from models.state import State
-from models.city import City
 from models.amenity import Amenity
-from models import storage
 
 # creation of a State
-state = State(name="California")
+state = state.State(name="California")
 state.save()
 
 # creation of a City
-city = City(state_id=state.id, name="San Francisco")
+city = city.City(state_id=state.id, name="San Francisco")
 city.save()
 
 # creation of a User
-user = User(email="john@snow.com", password="johnpwd")
+user = user.User(email="john@snow.com", password="johnpwd")
 user.save()
 
 # creation of 2 Places
