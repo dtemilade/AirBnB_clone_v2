@@ -36,9 +36,14 @@ class DBStorage():
         from models.review import Review
         from models.user import User
         from models.state import State
+        
+        if self.__session is None:
+            return {}
+        
         new_dict = {}
         all_class = [City, State, User, Place, Review, Amenity]
         list_objects = []
+        
         if cls is None:
             for i in range(len(all_class)):
                 list_objects += self.__session.query(all_class[i]).all()
