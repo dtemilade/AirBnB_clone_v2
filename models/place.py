@@ -6,7 +6,7 @@ from models.amenity import Amenity
 from sqlalchemy import Column, String, Integer, Float, ForeignKey, Table
 from os import getenv
 from sqlalchemy.orm import relationship
-from models import storage
+
 
 place_amenity = Table("place_amenity", Base.metadata,
                       Column("place_id", String(60),
