@@ -27,6 +27,9 @@ class DBStorage():
             from models.base_model import Base
             Base.metadata.drop_all(self.__engine)
 
+        self.reload()
+        
+        
     def all(self, cls=None):
         """retrives all objects of a class name"""
         from models.base_model import Base

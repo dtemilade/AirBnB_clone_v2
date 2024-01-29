@@ -50,9 +50,13 @@ class BaseModel:
     def save(self):
         """Updates updated_at with current time when instance is changed"""
         from models import storage
-        self.updated_at = datetime.now()
-        storage.new(self)
-        storage.save()
+        if storage:
+            self.updated_at = datetime.now()
+            storage.new(self)
+            storage.save()
+            
+        else:
+            print("Storage not initialized")
 
     def to_dict(self):
         """Convert instance into dict format"""
@@ -70,4 +74,4 @@ class BaseModel:
         """to delete the current instance from the storage by
             calling the method delete"""
         from models import storage
-        storage.delete()
+        storage.delete(self)
